@@ -14,10 +14,8 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-// Redirect root to login
-Route::get('/', function () {
-    return redirect('/login');
-});
+// Index/Home Route
+Route::get('/', [LoginController::class, 'index'])->name('index');
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

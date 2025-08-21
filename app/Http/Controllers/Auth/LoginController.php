@@ -64,6 +64,19 @@ class LoginController extends Controller
     }
 
     /**
+     * Show the index/home page
+     */
+    public function index()
+    {
+        // Redirect to dashboard if already logged in
+        if (Session::has('user')) {
+            return redirect()->route('dashboard')->with('info', 'Welcome back!');
+        }
+
+        return view('index');
+    }
+
+    /**
      * Show the login form
      */
     public function showLoginForm()
