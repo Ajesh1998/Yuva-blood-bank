@@ -1,0 +1,65 @@
+# Jekyll Configuration for GitHub Pages
+# This configuration ensures that only documentation is processed by Jekyll
+# and prevents processing of React/Laravel application files
+
+# Comprehensive exclusions to prevent Jekyll processing issues
+exclude:
+  - react-frontend/
+  - frontend/
+  - vendor/
+  - app/
+  - bootstrap/
+  - config/
+  - database/
+  - resources/
+  - routes/
+  - storage/
+  - tests/
+  - public/
+  - node_modules/
+  - "**node_modules/**"
+  - "**/.cache/**"
+  - "**/build/**"
+  - "**/dist/**"
+  - "*.php"
+  - "*.json"
+  - "*.xml"
+  - "*.sh"
+  - "*.lock"
+  - composer.json
+  - composer.lock
+  - package.json
+  - package-lock.json
+  - artisan
+  - .env*
+  - .phpunit*
+  - Homestead.*
+  - auth.json
+  - phpunit.xml
+  - vite.config.js
+
+# Only include documentation files
+include:
+  - "README.md"
+  - "*.md"
+  - "_docs/"
+  - "_guides/"
+
+# Prevent processing of any TypeScript ESLint or similar documentation
+plugins: []
+
+# Basic Jekyll settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# Disable all automatic processing
+safe: true
+incremental: false
+profile: false
+
+# Site information
+title: "Yuva Blood Bank Documentation"
+description: "Professional Blood Donor Management System - Documentation"
+url: ""
+baseurl: ""
