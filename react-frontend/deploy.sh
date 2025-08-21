@@ -35,6 +35,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Add .nojekyll file to disable Jekyll processing
+echo -e "${YELLOW}Adding .nojekyll file to disable Jekyll processing...${NC}"
+touch build/.nojekyll
+
+# Create 404.html for single-page app routing
+echo -e "${YELLOW}Creating 404.html for SPA routing...${NC}"
+cp build/index.html build/404.html
+
 echo -e "${GREEN}✅ React application built successfully${NC}"
 
 echo -e "${YELLOW}Step 3: Checking if gh-pages is installed...${NC}"

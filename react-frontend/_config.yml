@@ -1,0 +1,15 @@
+exclude:
+  - node_modules/
+  - package.json
+  - package-lock.json
+  - README.md
+  - .env
+  - .env.production
+  - tsconfig.json
+  - deploy.sh
+  - src/
+  - public/
+plugins:
+  - jekyll-sitemap
+markdown: kramdown
+highlighter: rouge

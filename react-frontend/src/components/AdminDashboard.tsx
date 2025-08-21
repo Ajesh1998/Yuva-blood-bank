@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 interface DashboardStats {
@@ -28,10 +28,8 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     // Check authentication
@@ -149,14 +147,14 @@ const AdminDashboard: React.FC = () => {
           
           <div className="navbar-nav ms-auto">
             <div className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <button className="nav-link dropdown-toggle d-flex align-items-center btn btn-link text-decoration-none" type="button" data-bs-toggle="dropdown">
                 <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" 
                      style={{width: '32px', height: '32px', fontSize: '14px'}}>
                   {username.charAt(0).toUpperCase()}
                 </div>
                 <span>{username}</span>
                 <span className={`badge ${getRoleColor(role)} ms-2`}>{role}</span>
-              </a>
+              </button>
               <ul className="dropdown-menu">
                 <li><Link className="dropdown-item" to="/profile"><i className="fas fa-user me-2"></i>Profile</Link></li>
                 <li><Link className="dropdown-item" to="/settings"><i className="fas fa-cog me-2"></i>Settings</Link></li>
