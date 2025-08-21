@@ -38,9 +38,7 @@ jobs:
       run: composer validate --strict
     
     - name: Install Dependencies (Production)
-      run: |
-        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-dev --optimize-autoloader || \
-        (composer update --lock --no-dev && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-dev --optimize-autoloader)
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-dev --optimize-autoloader
     
     - name: Generate key
       run: php artisan key:generate
