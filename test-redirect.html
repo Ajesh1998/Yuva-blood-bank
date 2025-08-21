@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Redirect Logic</title>
+</head>
+<body>
+    <h1>Testing Authentication Redirect</h1>
+    <div id="status"></div>
+    <button onclick="clearStorage()">Clear Storage & Test</button>
+    <button onclick="setAuthenticated()">Set Authenticated & Test</button>
+    <button onclick="testRedirect()">Test Current State</button>
+    
+    <script>
+        function clearStorage() {
+            localStorage.clear();
+            document.getElementById('status').innerHTML = 'Storage cleared. isAuthenticated: ' + (localStorage.getItem('isAuthenticated') === 'true');
+            setTimeout(() => window.location.href = 'http://localhost:3001', 1000);
+        }
+        
+        function setAuthenticated() {
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('username', 'admin');
+            localStorage.setItem('role', 'admin');
+            document.getElementById('status').innerHTML = 'Set authenticated. isAuthenticated: ' + (localStorage.getItem('isAuthenticated') === 'true');
+            setTimeout(() => window.location.href = 'http://localhost:3001', 1000);
+        }
+        
+        function testRedirect() {
+            const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+            document.getElementById('status').innerHTML = `
+                <p>isAuthenticated: ${isAuth}</p>
+                <p>localStorage.isAuthenticated: ${localStorage.getItem('isAuthenticated')}</p>
+                <p>Should redirect to: ${isAuth ? '/admin' : '/login'}</p>
+            `;
+        }
+        
+        // Show current state on load
+        testRedirect();
+    </script>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BloodBankController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Public API routes for Blood Bank
+Route::prefix('bloodbank')->group(function () {
+    Route::get('/app-info', [BloodBankController::class, 'getAppInfo']);
+    Route::get('/stats', [BloodBankController::class, 'getStats']);
+    Route::get('/donors', [BloodBankController::class, 'getDonorsList']);
+    Route::get('/donors/{id}', [BloodBankController::class, 'getDonor']);
+    Route::get('/donors/blood-type/{bloodType}', [BloodBankController::class, 'searchDonorsByBloodType']);
+    Route::post('/donors', [BloodBankController::class, 'registerDonor']);
+    Route::put('/donors/{id}', [BloodBankController::class, 'updateDonor']);
 });
