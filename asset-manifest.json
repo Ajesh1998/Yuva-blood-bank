@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.56466dad.css",
-    "main.js": "/static/js/main.9c3391d6.js",
-    "index.html": "/index.html",
-    "main.56466dad.css.map": "/static/css/main.56466dad.css.map",
-    "main.9c3391d6.js.map": "/static/js/main.9c3391d6.js.map"
+    "main.css": "/Yuva-blood-bank/static/css/main.56466dad.css",
+    "main.js": "/Yuva-blood-bank/static/js/main.73bceac9.js",
+    "index.html": "/Yuva-blood-bank/index.html",
+    "main.56466dad.css.map": "/Yuva-blood-bank/static/css/main.56466dad.css.map",
+    "main.73bceac9.js.map": "/Yuva-blood-bank/static/js/main.73bceac9.js.map"
   },
   "entrypoints": [
     "static/css/main.56466dad.css",
-    "static/js/main.9c3391d6.js"
+    "static/js/main.73bceac9.js"
   ]
 }
