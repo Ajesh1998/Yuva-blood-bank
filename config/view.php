@@ -14,7 +14,7 @@ return [
     */
 
     'paths' => [
-        resource_path('views'),
+        // Views directory removed - using React frontend only
     ],
 
     /*

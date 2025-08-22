@@ -18,7 +18,16 @@ class StaticAuth
     public function handle(Request $request, Closure $next)
     {
         if (!Session::has('user')) {
-            return redirect()->route('login')->with('error', 'Please login to access this page.');
+            // Return JSON response for API requests (React frontend)
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized. Please login to access this resource.'
+                ], 401);
+            }
+            
+            // For web requests, redirect to React frontend
+            return redirect()->away('http://localhost:3001/login');
         }
 
         return $next($request);
