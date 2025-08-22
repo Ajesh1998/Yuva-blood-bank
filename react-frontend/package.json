@@ -2,7 +2,7 @@
   "name": "yuva-blood-bank-frontend",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://Ajesh1998.github.io/Yuva-blood-bank",
+  "homepage": "https://ajesh1998.github.io/Yuva-blood-bank/",
   "dependencies": {
     "@types/node": "^16.18.0",
     "@types/react": "^18.2.0",
