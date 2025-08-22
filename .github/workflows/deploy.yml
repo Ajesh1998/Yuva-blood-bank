@@ -9,7 +9,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write 
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -43,26 +49,24 @@ jobs:
         echo "Build completed successfully"
         ls -la build/
       env:
-        REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL || 'https://your-api-domain.com/api' }}
+        REACT_APP_API_URL: ${{ vars.REACT_APP_API_URL || 'https://your-api-domain.com/api' }}
         REACT_APP_NAME: Yuva Blood Bank
         REACT_APP_VERSION: 1.0.0
         
-    - name: Deploy to GitHub Pages (bypassing Jekyll)
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: peaceiris/actions-gh-pages@v4
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./react-frontend/build
-        enable_jekyll: false
-        exclude_assets: '.github'
-        force_orphan: true
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        commit_message: 'Deploy React App ${{ github.sha }}'
+        path: './react-frontend/build'
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
         
     - name: Verify deployment
       run: |
         echo "✅ React app deployed successfully"
         echo "🌐 Site should be available at: https://ajesh1998.github.io/Yuva-blood-bank/"
-        echo "📁 Deployed files:"
-        ls -la ./react-frontend/build/
+        echo "📁 Deployment URL: ${{ steps.deployment.outputs.page_url }}"
