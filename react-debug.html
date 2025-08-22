@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App Debugging</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #dc3545 0%, #8b0000 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            background: #28a745;
+        }
+        .warning {
+            background: #ffc107;
+            color: black;
+        }
+        .danger {
+            background: #dc3545;
+        }
+        #status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 React App Debug Tool</h1>
+        <p>This tool helps debug why the React app isn't loading properly.</p>
+        
+        <div id="status"></div>
+        
+        <h3>🧪 Test Links:</h3>
+        <button onclick="testReactDev()" class="success">🚀 Test React Dev Server (localhost:3000)</button>
+        <button onclick="testReactDevIframe()">📱 Load React App in iframe</button>
+        <button onclick="testDirectAccess()">🔗 Open React App in New Tab</button>
+        <button onclick="testPaths()" class="warning">🛣️ Test All Possible Paths</button>
+        <button onclick="clearCache()" class="danger">🗑️ Clear Browser Cache & Test</button>
+        
+        <div id="iframe-container"></div>
+        
+        <h3>📋 Common Issues & Solutions:</h3>
+        <ul style="text-align: left;">
+            <li><strong>Port Issues:</strong> React server might be on different port</li>
+            <li><strong>Cache Issues:</strong> Browser cache might have old version</li>
+            <li><strong>JavaScript Disabled:</strong> Check if JS is enabled in browser</li>
+            <li><strong>Build Issues:</strong> React app might have compilation errors</li>
+            <li><strong>Path Issues:</strong> Wrong base path configuration</li>
+        </ul>
+    </div>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            status.innerHTML = `
+                <h4>[${timestamp}] ${type.toUpperCase()}</h4>
+                <p>${message}</p>
+            `;
+        }
+        
+        function testReactDev() {
+            updateStatus('Testing React development server...', 'info');
+            fetch('http://localhost:3000')
+                .then(response => {
+                    if (response.ok) {
+                        updateStatus('✅ React dev server is responding! Status: ' + response.status, 'success');
+                        return response.text();
+                    } else {
+                        throw new Error('Server responded with status: ' + response.status);
+                    }
+                })
+                .then(html => {
+                    if (html.includes('<div id="root">')) {
+                        updateStatus('✅ React app HTML structure looks correct!', 'success');
+                    } else {
+                        updateStatus('⚠️ HTML structure might be incorrect', 'warning');
+                    }
+                })
+                .catch(error => {
+                    updateStatus('❌ React dev server not accessible: ' + error.message, 'error');
+                    console.error('Error:', error);
+                });
+        }
+        
+        function testReactDevIframe() {
+            updateStatus('Loading React app in iframe...', 'info');
+            const container = document.getElementById('iframe-container');
+            container.innerHTML = '<iframe src="http://localhost:3000" title="React App"></iframe>';
+        }
+        
+        function testDirectAccess() {
+            updateStatus('Opening React app in new tab...', 'info');
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        function testPaths() {
+            const paths = [
+                'http://localhost:3000',
+                'http://localhost:3000/',
+                'http://localhost:3000/login',
+                'http://localhost:3000/home',
+                'http://localhost:3000/admin',
+                'http://127.0.0.1:3000',
+                'http://192.168.10.156:3000'
+            ];
+            
+            updateStatus('Testing multiple paths...', 'info');
+            
+            paths.forEach((path, index) => {
+                setTimeout(() => {
+                    fetch(path)
+                        .then(response => {
+                            console.log(`✅ ${path} - Status: ${response.status}`);
+                            if (index === paths.length - 1) {
+                                updateStatus('Path testing complete. Check console for results.', 'success');
+                            }
+                        })
+                        .catch(error => {
+                            console.log(`❌ ${path} - Error: ${error.message}`);
+                            if (index === paths.length - 1) {
+                                updateStatus('Path testing complete. Check console for results.', 'warning');
+                            }
+                        });
+                }, index * 200);
+            });
+        }
+        
+        function clearCache() {
+            updateStatus('Clearing cache and testing...', 'info');
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    registrations.forEach(registration => registration.unregister());
+                });
+            }
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            // Force reload
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 1000);
+        }
+        
+        // Auto-run initial test
+        setTimeout(testReactDev, 1000);
+    </script>
+</body>
+</html>

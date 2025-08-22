@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App Test Console</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .success { background: linear-gradient(45deg, #11998e, #38ef7d); }
+        .warning { background: linear-gradient(45deg, #f093fb, #f5576c); }
+        .info { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        
+        #status {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-online { background: #4CAF50; }
+        .status-offline { background: #f44336; }
+        .status-loading { background: #ff9800; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        h1, h2, h3 { text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Yuva Blood Bank - React App Test Console</h1>
+        <p>Complete testing suite for the React application and authentication flow</p>
+        
+        <div id="status"></div>
+        
+        <div class="test-grid">
+            <!-- Server Status -->
+            <div class="test-card">
+                <h3>🖥️ Server Status</h3>
+                <button onclick="checkReactServer()" class="success">Check React Dev Server</button>
+                <button onclick="checkLaravelAPI()" class="info">Check Laravel API</button>
+                <div id="server-status"></div>
+            </div>
+            
+            <!-- Authentication Tests -->
+            <div class="test-card">
+                <h3>🔐 Authentication Tests</h3>
+                <button onclick="clearAuth()" class="warning">Clear Authentication</button>
+                <button onclick="setTestAuth()" class="success">Set Test Authentication</button>
+                <button onclick="checkAuthState()">Check Auth State</button>
+                <div id="auth-status"></div>
+            </div>
+            
+            <!-- Route Tests -->
+            <div class="test-card">
+                <h3>🛣️ Route Tests</h3>
+                <button onclick="testRoute('/')" class="info">Test Root Route</button>
+                <button onclick="testRoute('/login')">Test Login Route</button>
+                <button onclick="testRoute('/admin')">Test Admin Route</button>
+                <button onclick="testRoute('/home')">Test Home Route</button>
+            </div>
+            
+            <!-- Component Tests -->
+            <div class="test-card">
+                <h3>⚛️ Component Tests</h3>
+                <button onclick="loadComponent('login')" class="success">Load Login Page</button>
+                <button onclick="loadComponent('home')">Load Home Page</button>
+                <button onclick="loadComponent('admin')">Load Admin Dashboard</button>
+                <button onclick="loadComponent('register')">Load Registration</button>
+            </div>
+        </div>
+        
+        <div id="iframe-container"></div>
+        
+        <h3>📋 Quick Actions</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="openDevTools()" class="info">Open Browser DevTools</button>
+            <button onclick="viewConsole()">View React Console</button>
+            <button onclick="testFullFlow()" class="success">Test Complete Login Flow</button>
+            <button onclick="resetEverything()" class="warning">Reset Everything</button>
+        </div>
+    </div>
+
+    <script>
+        let logCount = 0;
+        
+        function log(message, type = 'info') {
+            const status = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            const emoji = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+            
+            status.innerHTML = `<div>[${timestamp}] ${emoji} ${message}</div>` + status.innerHTML;
+            console.log(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
+            
+            // Limit logs to 50 entries
+            if (++logCount > 50) {
+                const lines = status.innerHTML.split('</div>');
+                status.innerHTML = lines.slice(0, 50).join('</div>');
+                logCount = 50;
+            }
+        }
+        
+        async function checkReactServer() {
+            log('Checking React development server...', 'info');
+            try {
+                const response = await fetch('http://localhost:3000');
+                if (response.ok) {
+                    const html = await response.text();
+                    if (html.includes('<div id="root">')) {
+                        log('React server is running and serving correct HTML!', 'success');
+                        document.getElementById('server-status').innerHTML = 
+                            '<span class="status-indicator status-online"></span>React Dev Server: Online';
+                    } else {
+                        log('React server responding but HTML structure incorrect', 'warning');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log(`React server check failed: ${error.message}`, 'error');
+                document.getElementById('server-status').innerHTML = 
+                    '<span class="status-indicator status-offline"></span>React Dev Server: Offline';
+            }
+        }
+        
+        async function checkLaravelAPI() {
+            log('Checking Laravel API server...', 'info');
+            try {
+                const response = await fetch('http://localhost:8000/api/bloodbank/app-info');
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Laravel API responding: ${data.app_name || 'API Working'}`, 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log(`Laravel API check failed: ${error.message}`, 'warning');
+            }
+        }
+        
+        function clearAuth() {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            log('Authentication cleared from localStorage', 'success');
+            checkAuthState();
+        }
+        
+        function setTestAuth() {
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('username', 'admin');
+            localStorage.setItem('role', 'admin');
+            log('Test authentication set (admin/admin)', 'success');
+            checkAuthState();
+        }
+        
+        function checkAuthState() {
+            const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+            const username = localStorage.getItem('username');
+            const role = localStorage.getItem('role');
+            
+            const authInfo = `Auth: ${isAuth ? '✅' : '❌'} | User: ${username || 'none'} | Role: ${role || 'none'}`;
+            log(`Current authentication state: ${authInfo}`, isAuth ? 'success' : 'info');
+            
+            document.getElementById('auth-status').innerHTML = authInfo;
+        }
+        
+        async function testRoute(route) {
+            log(`Testing route: ${route}`, 'info');
+            try {
+                const url = `http://localhost:3000${route}`;
+                const response = await fetch(url);
+                if (response.ok) {
+                    log(`Route ${route} is accessible`, 'success');
+                    // Open in new tab for visual inspection
+                    window.open(url, '_blank');
+                } else {
+                    log(`Route ${route} returned ${response.status}`, 'warning');
+                }
+            } catch (error) {
+                log(`Route ${route} test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function loadComponent(component) {
+            log(`Loading component: ${component}`, 'info');
+            const container = document.getElementById('iframe-container');
+            const url = `http://localhost:3000/${component}`;
+            container.innerHTML = `
+                <h3>Loading ${component} component:</h3>
+                <iframe src="${url}" title="${component} component"></iframe>
+            `;
+        }
+        
+        function openDevTools() {
+            log('Opening browser developer tools...', 'info');
+            // This will work in most browsers
+            if (window.chrome && window.chrome.devtools) {
+                window.chrome.devtools.inspectedWindow.eval('console.log("DevTools opened from test console")');
+            }
+            alert('Press F12 to open Developer Tools and check the Console tab for React app logs');
+        }
+        
+        function viewConsole() {
+            log('Check browser console for React app logs', 'info');
+            window.open('http://localhost:3000', '_blank');
+            setTimeout(() => {
+                alert('Check the Console tab in Developer Tools (F12) to see React app debug logs');
+            }, 1000);
+        }
+        
+        async function testFullFlow() {
+            log('Starting complete authentication flow test...', 'info');
+            
+            // Clear auth first
+            clearAuth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Test root redirect to login
+            log('Step 1: Testing root redirect to login...', 'info');
+            window.open('http://localhost:3000', '_blank');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Set auth and test admin redirect
+            log('Step 2: Setting authentication and testing admin redirect...', 'info');
+            setTestAuth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            window.open('http://localhost:3000', '_blank');
+            
+            log('Complete flow test initiated. Check the opened tabs!', 'success');
+        }
+        
+        function resetEverything() {
+            localStorage.clear();
+            sessionStorage.clear();
+            log('All storage cleared, authentication reset', 'warning');
+            document.getElementById('auth-status').innerHTML = '';
+            document.getElementById('server-status').innerHTML = '';
+            document.getElementById('iframe-container').innerHTML = '';
+        }
+        
+        // Auto-run initial checks
+        setTimeout(() => {
+            log('React App Test Console initialized', 'success');
+            checkReactServer();
+            checkAuthState();
+        }, 500);
+    </script>
+</body>
+</html>

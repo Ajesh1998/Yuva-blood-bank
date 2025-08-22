@@ -9,6 +9,11 @@ import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
+// Add debugging
+console.log('🚀 App.tsx loaded successfully');
+console.log('📍 Current URL:', window.location.href);
+console.log('🔧 Environment:', process.env.NODE_ENV);
+
 // Component to handle root route redirect
 const RootRedirect: React.FC = () => {
   const navigate = useNavigate();
@@ -58,6 +63,8 @@ const RootRedirect: React.FC = () => {
 };
 
 function App() {
+  console.log('🎯 App component rendering');
+  
   return (
     <Router>
       <div className="App">
