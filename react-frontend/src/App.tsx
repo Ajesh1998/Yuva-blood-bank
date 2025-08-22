@@ -15,16 +15,24 @@ const RootRedirect: React.FC = () => {
   
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    console.log('RootRedirect: isAuthenticated =', isAuthenticated);
-    console.log('RootRedirect: localStorage =', localStorage.getItem('isAuthenticated'));
+    console.log('=== ROOT REDIRECT DEBUG ===');
+    console.log('Current URL:', window.location.href);
+    console.log('isAuthenticated check:', localStorage.getItem('isAuthenticated'));
+    console.log('isAuthenticated boolean:', isAuthenticated);
+    console.log('All localStorage:', {...localStorage});
     
-    if (isAuthenticated) {
-      console.log('Redirecting to /admin');
-      navigate('/admin', { replace: true });
-    } else {
-      console.log('Redirecting to /login');
-      navigate('/login', { replace: true });
-    }
+    // Add a small delay to ensure the page is fully loaded
+    const timer = setTimeout(() => {
+      if (isAuthenticated) {
+        console.log('✅ Authenticated - Redirecting to /admin');
+        navigate('/admin', { replace: true });
+      } else {
+        console.log('❌ Not authenticated - Redirecting to /login');
+        navigate('/login', { replace: true });
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [navigate]);
   
   return (
@@ -39,8 +47,11 @@ const RootRedirect: React.FC = () => {
     }}>
       <div style={{ textAlign: 'center' }}>
         <div className="spinner-border text-light mb-3" role="status"></div>
-        <p>Checking authentication...</p>
-        <p>Redirecting...</p>
+        <p>🔍 Checking authentication status...</p>
+        <p>🔄 Redirecting...</p>
+        <small style={{ opacity: 0.7 }}>
+          Open browser console to see debug info
+        </small>
       </div>
     </div>
   );

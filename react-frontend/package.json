@@ -2,7 +2,7 @@
   "name": "yuva-blood-bank-frontend",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://ajesh1998.github.io/Yuva-blood-bank/",
+  "__homepage_for_production": "https://ajesh1998.github.io/Yuva-blood-bank/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@types/node": "^16.18.0",
